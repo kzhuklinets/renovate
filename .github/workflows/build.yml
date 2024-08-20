@@ -338,6 +338,7 @@ jobs:
       - setup-build
       - lint-eslint
       - lint-other
+      - build
 
     if: github.repository == 'renovatebot/renovate' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
