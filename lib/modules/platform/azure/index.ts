@@ -234,7 +234,7 @@ export async function initRepo({
   const manualUrl = `${defaults.endpoint!}${encodeURIComponent(
     projectName,
   )}/_git/${encodeURIComponent(repoName)}`;
-  const url = encodeURIComponent(repo.remoteUrl) ?? manualUrl;
+  const url = repo.remoteUrl ? encodeURIComponent(repo.remoteUrl) : manualUrl;
   await git.initRepo({
     ...config,
     url,
