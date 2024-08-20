@@ -249,8 +249,8 @@ jobs:
         run: |
           docker build \
           -f tools/docker/Dockerfile \
-          -t "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest" \
-          --cache-from ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
+          -t "ghcr.io/${{ github.repository_owner }}/renovatebot:latest" \
+          --cache-from ghcr.io/${{ github.repository_owner }}/renovatebot:latest \
           .
 
       - name: Log into registry
@@ -259,7 +259,7 @@ jobs:
   
       - name: Push image (latest, ShortSha)
         run: |
-          docker push "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest"
+          docker push "ghcr.io/${{ github.repository_owner }}/renovatebot:latest"
   
 
       
