@@ -209,19 +209,6 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Build docker
-        run: pnpm build:docker build --tries=3
-        env:
-          LOG_LEVEL: debug
-
-      - name: Pack
-        run: pnpm test-e2e:pack
-
-      - name: Upload
-        uses: actions/upload-artifact@834a144ee995460fba8ed112a2fc961b36a5ec5a # v4.3.6
-        with:
-          name: renovate-package
-          path: renovate-0.0.0-semantic-release.tgz
 
   release:
     needs:
@@ -257,18 +244,12 @@ jobs:
 
       - uses: sigstore/cosign-installer@4959ce089c160fddf62f7b42464195ba1a56d382 # v3.6.0
 
-      - name: Determine Version
-        uses: gittools/actions/gitversion/execute@v3.0.0
-        id: gitversion
-        with:
-          useConfigFile: false
-
+  
       - name: Build image
         run: |
           docker build \
           -f tools/docker/Dockerfile \
           -t "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest" \
-          -t "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.shortSha }}" \
           --cache-from ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
           .
 
@@ -279,7 +260,6 @@ jobs:
       - name: Push image (latest, ShortSha)
         run: |
           docker push "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest"
-          docker push "ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ steps.gitversion.outputs.shortSha }}"
   
 
       
