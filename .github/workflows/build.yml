@@ -263,7 +263,6 @@ jobs:
       - setup-build
       - build
 
-    if: github.repository == 'renovatebot/renovate' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
