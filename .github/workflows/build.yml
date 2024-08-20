@@ -232,58 +232,6 @@ jobs:
           path: .cache/eslint
           key: eslint-main-cache
 
-  lint-prettier:
-    needs:
-      - setup-build
-    runs-on: ubuntu-latest
-    timeout-minutes: 7
-
-    permissions:
-      actions: write
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
-        with:
-          show-progress: false
-
-      - name: Setup Node.js
-        uses: ./.github/actions/setup-node
-        with:
-          node-version: ${{ needs.setup-build.outputs.node-version }}
-          os: ${{ runner.os }}
-
-      - name: Restore prettier cache
-        uses: actions/cache/restore@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          path: .cache/prettier
-          key: prettier-main-cache
-
-      - name: Lint
-        run: |
-          pnpm prettier --write --cache-location .cache/prettier
-          git diff --quiet || {
-            echo "[ERROR] Please apply the changes prettier suggests:"
-            git diff --color=always
-            exit 1
-          }
-
-      - name: Remove cache
-        if: github.event_name == 'push'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GH_REPO: ${{ github.event.repository.full_name }}
-        run: |
-          gh api --method DELETE /repos/{owner}/{repo}/actions/caches?key=prettier-main-cache ||
-            echo "Cache not found"
-
-      - name: Save prettier cache
-        if: github.event_name == 'push'
-        uses: actions/cache/save@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9 # v4.0.2
-        with:
-          path: .cache/prettier
-          key: prettier-main-cache
-
   lint-docs:
     needs:
       - setup-build
@@ -464,7 +412,6 @@ jobs:
     needs:
       - setup-build
       - lint-eslint
-      - lint-prettier
       - lint-docs
       - lint-other
       - build-docs
