@@ -261,7 +261,7 @@ jobs:
         uses: gittools/actions/gitversion/execute@v3.0.0
         id: gitversion
         with:
-          useConfigFile: true
+          useConfigFile: false
 
       - name: Build image
         run: |
